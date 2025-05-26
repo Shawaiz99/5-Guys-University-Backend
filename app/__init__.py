@@ -2,8 +2,9 @@ from flask import Flask
 from app.config import get_config
 from app.extensions import db, migrate, cors
 from app.admin import init_admin
-from app.controllers.example import example_bp
+from app.controllers.auth_controller import auth_bp
 from app.error_handlers import register_error_handlers
+
 
 def create_app(env: str | None = None) -> Flask:
     app = Flask(__name__)
@@ -13,12 +14,12 @@ def create_app(env: str | None = None) -> Flask:
     migrate.init_app(app, db)
     cors.init_app(app)
     init_admin(app)
-    
+
     # Register error handlers
     register_error_handlers(app)
 
     # register blueprints
-    app.register_blueprint(example_bp, url_prefix="/api/v1")
+    app.register_blueprint(auth_bp, url_prefix="/api/v1/auth")
 
     # health check
     @app.get("/ping")
