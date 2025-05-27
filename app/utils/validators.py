@@ -13,6 +13,15 @@ def is_valid_username(username: str):
 def is_valid_password(pwd: str):
     return len(pwd) >= 5 and any(ch.isdigit() for ch in pwd)
 
+def is_valid_name(name: str) -> bool:
+    return isinstance(name, str) and 1 <= len(name.strip()) <= 50
+
+def is_valid_bio(bio: str) -> bool:
+    return isinstance(bio, str) and len(bio.strip()) <= 300
+
+def is_valid_url(url: str) -> bool:
+    return isinstance(url, str) and re.match(r'^https?://', url)
+
 
 def equals_case_insensitive(a, b) -> bool:
     """Compares two values case-insensitively if both are strings."""
