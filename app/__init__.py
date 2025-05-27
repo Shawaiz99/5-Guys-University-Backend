@@ -4,6 +4,8 @@ from app.extensions import db, migrate, cors
 from app.admin import init_admin
 from app.controllers.auth_controller import auth_bp
 from app.error_handlers import register_error_handlers
+from app.controllers.profile_controller import profile_bp
+
 
 
 def create_app(env: str | None = None) -> Flask:
@@ -20,6 +22,7 @@ def create_app(env: str | None = None) -> Flask:
 
     # register blueprints
     app.register_blueprint(auth_bp, url_prefix="/api/v1/auth")
+    app.register_blueprint(profile_bp)
 
     # health check
     @app.get("/ping")

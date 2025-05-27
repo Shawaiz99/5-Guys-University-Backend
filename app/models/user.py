@@ -27,11 +27,12 @@ class User(db.Model):
     )
 
 # relationships:
-    # profile = relationship(
-    #     "Profile",
-    #     back_populates="user",
-    #     uselist=False,
-    #     cascade="all, delete-orphan")
+    profile = relationship(
+        "Profile",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan"
+        )
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
