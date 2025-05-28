@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 
 load_dotenv(".env")
 
+
 class BaseConfig:
     SQLALCHEMY_DATABASE_URI = getenv("DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -11,15 +12,19 @@ class BaseConfig:
     APISPEC_VERSION = "1.0.0"
     SECRET_KEY = getenv("SECRET_KEY")
 
+
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
+
 
 class TestConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = "sqlite+pysqlite:///:memory:"
     TESTING = True
 
+
 class ProductionConfig(BaseConfig):
     DEBUG = False
+
 
 def get_config(env):
     return {
