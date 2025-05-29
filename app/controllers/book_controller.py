@@ -2,11 +2,13 @@ from flask import Blueprint, request, jsonify
 from app.services.book_service import BookService
 from app.repositories.book_repository import BookRepository
 from sqlalchemy.exc import IntegrityError
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 book_bp = Blueprint("books", __name__)
 
 
 @book_bp.route("/books", methods=["POST"])
+@jwt_required()
 def create_book():
     """Create a new book
     Request body:
@@ -73,6 +75,7 @@ def create_book():
 
 
 @book_bp.route("/books", methods=["GET"])
+@jwt_required()
 def get_books():
     """Get all books
     Returns 
@@ -91,6 +94,7 @@ def get_books():
 
 
 @book_bp.route("/books/<int:book_id>", methods=["GET"])
+@jwt_required()
 def get_book(book_id):
     """Get book by ID
     Returns 
@@ -112,6 +116,7 @@ def get_book(book_id):
 
 
 @book_bp.route("/books/<int:book_id>", methods=["PUT"])
+@jwt_required()
 def update_book(book_id):
     """Update book details
     Request body:
@@ -168,6 +173,7 @@ def update_book(book_id):
 
 
 @book_bp.route("/books/<int:book_id>", methods=["DELETE"])
+@jwt_required()
 def delete_book(book_id):
     """Delete a book
     Returns 
