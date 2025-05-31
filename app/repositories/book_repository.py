@@ -96,3 +96,10 @@ class BookRepository:
             Book.availabilaty_status) == availabilaty_status.lower())
         result = db.session.execute(stmt)
         return result.scalars().all()
+
+    @staticmethod
+    def get_by_isbn(isbn: str) -> Optional[Book]:
+        """Get book by ISBN (case-insensitive)"""
+        stmt = select(Book).where(func.lower(Book.isbn) == isbn.lower())
+        result = db.session.execute(stmt)
+        return result.scalars().first()
