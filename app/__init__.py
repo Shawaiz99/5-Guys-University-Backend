@@ -6,6 +6,7 @@ from app.controllers.auth_controller import auth_bp
 from app.controllers.author_controller import author_bp
 from app.controllers.book_controller import book_bp
 from app.controllers.user_controller import user_bp
+from app.controllers.wishlist_item_controller import wishlist_items_bp
 from app.error_handlers import register_error_handlers
 
 
@@ -27,6 +28,7 @@ def create_app(env: str | None = None) -> Flask:
     app.register_blueprint(author_bp, url_prefix="/api/v1")
     app.register_blueprint(book_bp, url_prefix="/api/v1")
     app.register_blueprint(user_bp, url_prefix="/api/v1")
+    app.register_blueprint(wishlist_items_bp, url_prefix="/api/v1")
 
 
     # health check
