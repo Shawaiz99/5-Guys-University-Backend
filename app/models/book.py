@@ -25,7 +25,9 @@ class Book(db.Model):
         nullable=False
     )
     quantity = mapped_column(Integer, default=0, nullable=False)
-    author_id = mapped_column(Integer, nullable=False)
+    author_id = mapped_column(
+        Integer, db.ForeignKey("authors.id"), nullable=False)
+
     cover_image_url = mapped_column(String(255), nullable=True)
     date_added = mapped_column(
         DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
@@ -37,9 +39,9 @@ class Book(db.Model):
     )
 
    # relationships:
-    # author = relationship("Author", back_populates="books")
     wishlist_items = relationship(
         "WishlistItem", back_populates="book", cascade="all, delete-orphan")
+    author = relationship("Author", back_populates="books")
     # book_image_model = relationship(
     #     "BookImageModel", back_populates="book", cascade="all, delete-orphan")
 
