@@ -1,0 +1,20 @@
+
+from app.extensions import db
+from sqlalchemy import Integer, String
+from sqlalchemy.orm import mapped_column
+
+
+class Author(db.Model):
+    __tablename__ = "authors"
+    id = mapped_column(Integer, primary_key=True)
+    name = mapped_column(String(255), nullable=False, unique=False)
+    biography = mapped_column(String(1000), nullable=True, unique=False)
+    photo_url = mapped_column(String(255), nullable=True, unique=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "biography": self.biography,
+            "photo_url": self.photo_url
+        }
