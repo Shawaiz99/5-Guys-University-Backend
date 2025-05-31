@@ -16,6 +16,7 @@ class BaseConfig:
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)
 
 
+
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
 
