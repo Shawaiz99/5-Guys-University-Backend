@@ -5,6 +5,7 @@ from faker import Faker
 from app import create_app
 from app.extensions import db
 from app.models.user import User
+from app.models.profile import Profile
 
 fake = Faker()
 
@@ -16,12 +17,21 @@ def run():
             email = fake.unique.email()
             username = fake.unique.user_name()
             password = fake.password()
+
             if not db.session.scalar(db.select(User).filter_by(email=email)):
-                db.session.add(User(
+                user = User(
                     email=email,
                     username=username,
                     password=password
-                ))  # type: ignore
+                )
+                profile = Profile(
+                    first_name=fake.first_name(),
+                    last_name=fake.last_name(),
+                    bio=fake.sentence(),
+                    avatar_url=fake.image_url()
+                )
+                user.profile = profile
+                db.session.add(user)
         db.session.commit()
         print("🌱  Seeded 10 fake users")
 
