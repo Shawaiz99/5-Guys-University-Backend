@@ -18,3 +18,10 @@ class AuthService:
             email, username, password, user_role=user_role
         )
         return user
+
+    @staticmethod
+    def login(email: str, password: str) -> User:
+        user = UserRepository.get_by_email(email)
+        if not user or not user.check_password(password):
+            raise ValueError("Invalid email or password")
+        return user
