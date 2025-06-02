@@ -20,3 +20,8 @@ class UserService:
     def get_user_by_email(user_email: str) -> Optional[User]:
         print(f"Fetching user by email: {user_email}")
         return UserRepository.get_by_email(user_email)
+
+    @staticmethod
+    def get_all_users(limit: int = 100, offset: int = 0) -> list[User]:
+        """Get all users with pagination."""
+        return UserRepository.get_all(limit, offset)

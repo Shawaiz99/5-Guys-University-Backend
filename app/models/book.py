@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from sqlalchemy import String, DateTime, Integer, Boolean, Enum, Float, DECIMAL
+from sqlalchemy import String, DateTime, Integer, Enum, Float, DECIMAL, ForeignKey
 from sqlalchemy.orm import mapped_column, relationship
 from app.extensions import db
 from datetime import datetime
@@ -25,7 +25,8 @@ class Book(db.Model):
         nullable=False
     )
     quantity = mapped_column(Integer, default=0, nullable=False)
-    author_id = mapped_column(Integer, nullable=False)
+    author_id = mapped_column(
+        Integer, ForeignKey("authors.id"), nullable=False)
     cover_image_url = mapped_column(String(255), nullable=True)
     date_added = mapped_column(
         DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
@@ -37,11 +38,13 @@ class Book(db.Model):
     )
 
    # relationships:
-    # author = relationship("Author", back_populates="books")
+    author = relationship("Author", back_populates="books")
     # wishlist_items = relationship(
     #     "WishlistItem", back_populates="book", cascade="all, delete-orphan")
     # book_image_model = relationship(
     #     "BookImageModel", back_populates="book", cascade="all, delete-orphan")
+    purchased_by = relationship(
+        "MyLibrary", back_populates="book", cascade="all, delete-orphan")
 
     def serialize(self):
         return {
@@ -58,6 +61,7 @@ class Book(db.Model):
             "availabilaty_status": self.availabilaty_status,
             "quantity": self.quantity,
             "author_id": self.author_id,
+            "author": self.author.serialize() if hasattr(self.author, 'serialize') else None,
             "cover_image_url": self.cover_image_url,
             "date_added": self.date_added.isoformat(),
             "created_at": self.created_at.isoformat(),

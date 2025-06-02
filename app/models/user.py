@@ -32,6 +32,8 @@ class User(db.Model):
     #     back_populates="user",
     #     uselist=False,
     #     cascade="all, delete-orphan")
+    library = relationship(
+        "MyLibrary", back_populates="user", cascade="all, delete-orphan")
 
     def set_password(self, password):
         self.password = generate_password_hash(password)

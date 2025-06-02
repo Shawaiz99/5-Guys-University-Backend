@@ -1,7 +1,7 @@
 
 from app.extensions import db
 from sqlalchemy import Integer, String
-from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import mapped_column, relationship
 
 
 class Author(db.Model):
@@ -10,6 +10,9 @@ class Author(db.Model):
     name = mapped_column(String(255), nullable=False, unique=False)
     biography = mapped_column(String(1000), nullable=True, unique=False)
     photo_url = mapped_column(String(255), nullable=True, unique=False)
+
+    books = relationship(
+        "Book", back_populates="author", cascade="all, delete-orphan")
 
     def serialize(self):
         return {
