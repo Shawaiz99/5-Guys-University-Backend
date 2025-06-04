@@ -42,6 +42,7 @@ class Book(db.Model):
     wishlist_items = relationship(
         "WishlistItem", back_populates="book", cascade="all, delete-orphan")
     author = relationship("Author", back_populates="books")
+    
     # book_image_model = relationship(
     #     "BookImageModel", back_populates="book", cascade="all, delete-orphan")
 
