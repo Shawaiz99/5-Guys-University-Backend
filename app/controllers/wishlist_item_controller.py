@@ -41,3 +41,15 @@ def remove_from_wishlist(book_id: int):
         return jsonify({"message": f"Book '{book_title}' removed from wishlist"}), 200
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
+
+
+@wishlist_items_bp.route("/wishlist/clear", methods=["POST"])
+@jwt_required()
+def clear_wishlist():
+    """Clear all items from the logged-in user's wishlist."""
+    user_id = get_jwt_identity()
+    try:
+        WishlistItemsService.clear_wishlist(user_id)
+        return jsonify({"message": "Wishlist cleared"}), 200
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
