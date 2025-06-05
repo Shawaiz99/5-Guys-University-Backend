@@ -8,7 +8,7 @@ book_bp = Blueprint("books", __name__)
 
 
 @book_bp.route("/books", methods=["POST"])
-@jwt_required()
+# @jwt_required()
 def create_book():
     """Create a new book
     Request body:
@@ -32,6 +32,9 @@ def create_book():
     if BookRepository.get_by_title(data["title"]):
         return jsonify({"error": "A book with this title already exists."}), 400
 
+    if BookRepository.get_by_isbn(data.get("isbn")):
+        return jsonify({"error": "A book with this ISBN already exists."}), 400
+
     if not data.get("author_id"):
         return jsonify({"error": "author_id property cannot be empty or missing"}), 400
 
@@ -40,8 +43,8 @@ def create_book():
 
     if not data.get("isbn"):
         return jsonify({"error": "isbn property cannot be empty or missing"}), 400
-    if len(data.get("isbn", "")) > 13:
-        return jsonify({"error": "isbn cannot be longer than 13 characters"}), 400
+    if len(data.get("isbn", "")) > 14:
+        return jsonify({"error": "isbn cannot be longer than 14 characters"}), 400
 
     try:
         book = BookService.create_book(
@@ -65,8 +68,6 @@ def create_book():
                 "book": book.serialize(),
             }
         ), 201
-    except IntegrityError:
-        return jsonify({"error": "A book with this ISBN already exists."}), 400
     except ValueError as e:
         return jsonify({"error": "Book creation failed", "message": str(e)}), 400
     except Exception as e:
@@ -75,7 +76,7 @@ def create_book():
 
 
 @book_bp.route("/books", methods=["GET"])
-@jwt_required()
+# @jwt_required()
 def get_books():
     """Get all books
     Returns 
@@ -94,7 +95,7 @@ def get_books():
 
 
 @book_bp.route("/books/<int:book_id>", methods=["GET"])
-@jwt_required()
+# @jwt_required()
 def get_book(book_id):
     """Get book by ID
     Returns 
@@ -116,7 +117,7 @@ def get_book(book_id):
 
 
 @book_bp.route("/books/<int:book_id>", methods=["PUT"])
-@jwt_required()
+# @jwt_required()
 def update_book(book_id):
     """Update book details
     Request body:
@@ -173,7 +174,7 @@ def update_book(book_id):
 
 
 @book_bp.route("/books/<int:book_id>", methods=["DELETE"])
-@jwt_required()
+# @jwt_required()
 def delete_book(book_id):
     """Delete a book
     Returns 

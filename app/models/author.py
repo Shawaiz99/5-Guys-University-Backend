@@ -1,15 +1,21 @@
-
+from sqlalchemy import String, Integer
+from sqlalchemy.orm import mapped_column, relationship
 from app.extensions import db
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import mapped_column, relationship
 
 
+
 class Author(db.Model):
     __tablename__ = "authors"
     id = mapped_column(Integer, primary_key=True)
-    name = mapped_column(String(255), nullable=False, unique=False)
-    biography = mapped_column(String(1000), nullable=True, unique=False)
-    photo_url = mapped_column(String(255), nullable=True, unique=False)
+    name = mapped_column(String(255), nullable=False)
+    biography = mapped_column(String(1000), nullable=True)
+    photo_url = mapped_column(String(255), nullable=True)
+
+    # One author has many books
+    books = relationship("Book", back_populates="author",
+                         cascade="all, delete-orphan")
 
     books = relationship(
         "Book", back_populates="author", cascade="all, delete-orphan")

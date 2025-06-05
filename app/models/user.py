@@ -26,6 +26,7 @@ class User(db.Model):
         nullable=False
     )
 
+
 # relationships:
     # profile = relationship(
     #     "Profile",
@@ -34,6 +35,13 @@ class User(db.Model):
     #     cascade="all, delete-orphan")
     library = relationship(
         "MyLibrary", back_populates="user", cascade="all, delete-orphan")
+
+    # relationships
+    wishlist_items = relationship(
+        "WishlistItem", back_populates="user", cascade="all, delete-orphan")
+    shopping_cart = relationship(
+        "ShoppingCart", back_populates="user", cascade="all, delete-orphan")
+
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
