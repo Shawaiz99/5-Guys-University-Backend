@@ -24,14 +24,17 @@ def add_book_to_library():
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
 
+# TODO line 32 cast to int since jwt_identity() returns a string
+
 
 @my_library_bp.route("/my-library/books", methods=["GET"])
 @jwt_required()
 def get_my_library_books():
     """Get all books in the user's library"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
+    print(f"User ID: {user_id}")
     books = MyLibraryService.get_books_by_user_id(user_id)
-
+    print(f"Books in library: {books}")
     if not books:
         return jsonify({"message": "No books found in your library"}), 404
 

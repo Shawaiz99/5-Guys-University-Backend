@@ -24,6 +24,6 @@ class MyLibrary(db.Model):
             "user_name": self.user.username if self.user else None,
             "book_id": self.book_id,
             "book_title": self.book.title if self.book else None,
-            "book_author": self.book.author if self.book else None,
+            "book_author":  self.book.author.serialize() if self.book else None,
             "created_at": self.created_at.isoformat()
         }
