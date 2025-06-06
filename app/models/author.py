@@ -1,6 +1,9 @@
 from sqlalchemy import String, Integer
 from sqlalchemy.orm import mapped_column, relationship
 from app.extensions import db
+from sqlalchemy import Integer, String
+from sqlalchemy.orm import mapped_column, relationship
+
 
 
 class Author(db.Model):
@@ -13,6 +16,9 @@ class Author(db.Model):
     # One author has many books
     books = relationship("Book", back_populates="author",
                          cascade="all, delete-orphan")
+
+    books = relationship(
+        "Book", back_populates="author", cascade="all, delete-orphan")
 
     def serialize(self):
         return {
