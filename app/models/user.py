@@ -3,7 +3,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, DateTime, Integer, Boolean, Enum
 from app.extensions import db
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
 
 class User(db.Model):
     __tablename__ = "users"
@@ -21,9 +20,10 @@ class User(db.Model):
         default="student"
     )
 
-    # 🔗 Relationships
     profile = relationship("Profile", back_populates="user", uselist=False, cascade="all, delete-orphan")
     wishlist_items = relationship("WishlistItem", back_populates="user", cascade="all, delete-orphan")
+    library = relationship("MyLibrary", back_populates="user", cascade="all, delete-orphan")
+    shopping_cart = relationship("ShoppingCart", back_populates="user", cascade="all, delete-orphan")
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
