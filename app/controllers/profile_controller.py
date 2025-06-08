@@ -2,12 +2,13 @@ from flask import Blueprint, jsonify, request
 from app.repositories.user_repository import UserRepository
 from app.extensions import db
 from app.utils.validators import is_valid_name, is_valid_bio, is_valid_url
+from app.services.profile_service import ProfileService
 
 profile_bp = Blueprint("profile", __name__)
 
 @profile_bp.route("/api/users/<int:user_id>/profile", methods=["GET"])
 def get_profile(user_id):
-    user = UserRepository.get_by_id(user_id)
+    user = ProfileService.get_user_by_id(user_id)
     if not user or not user.profile:
         return jsonify({"error": "Profile not found"}), 404
 
@@ -23,7 +24,7 @@ def get_profile(user_id):
 
 @profile_bp.route("/api/users/<int:user_id>/profile", methods=["PUT"])
 def update_profile(user_id):
-    user = UserRepository.get_by_id(user_id)
+    user = ProfileService.get_user_by_id(user_id)
     if not user or not user.profile:
         return jsonify({"error": "Profile not found"}), 404
 
@@ -44,12 +45,7 @@ def update_profile(user_id):
     if not is_valid_url(avatar_url):
         return jsonify({"error": "Invalid avatar URL"}), 400
 
-    profile.first_name = first_name
-    profile.last_name = last_name
-    profile.bio = bio
-    profile.avatar_url = avatar_url
-
-    db.session.commit()
+    updated_profile = ProfileService.update_profile(profile, bio, avatar_url)
 
     return jsonify({
         "message": "Profile updated",
