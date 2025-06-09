@@ -4,26 +4,34 @@ from sqlalchemy import String, DateTime, Integer, Boolean, Enum
 from app.extensions import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 class User(db.Model):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(db.String(255), unique=True)
-    email: Mapped[str] = mapped_column(db.String, unique=True, nullable=False, index=True)
+    email: Mapped[str] = mapped_column(
+        db.String, unique=True, nullable=False, index=True)
     password: Mapped[str] = mapped_column(db.String, nullable=False)
     is_active: Mapped[bool] = mapped_column(db.Boolean, default=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     user_role: Mapped[str] = mapped_column(
-        Enum("student", "professor", "librarian", name="role"),
-        default="student"
+        Enum("Student", "Professor", "Librarian", name="role"),
+        default="Student"
     )
 
-    profile = relationship("Profile", back_populates="user", uselist=False, cascade="all, delete-orphan")
-    wishlist_items = relationship("WishlistItem", back_populates="user", cascade="all, delete-orphan")
-    library = relationship("MyLibrary", back_populates="user", cascade="all, delete-orphan")
-    shopping_cart = relationship("ShoppingCart", back_populates="user", cascade="all, delete-orphan")
+    profile = relationship("Profile", back_populates="user",
+                           uselist=False, cascade="all, delete-orphan")
+    wishlist_items = relationship(
+        "WishlistItem", back_populates="user", cascade="all, delete-orphan")
+    library = relationship(
+        "MyLibrary", back_populates="user", cascade="all, delete-orphan")
+    shopping_cart = relationship(
+        "ShoppingCart", back_populates="user", cascade="all, delete-orphan")
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
