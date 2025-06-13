@@ -7,7 +7,8 @@ class ShoppingCart(db.Model):
     __tablename__ = "shopping_carts"
     id = mapped_column(Integer, primary_key=True)
     user_id = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
-    book_id = mapped_column(Integer, ForeignKey("books.id"), nullable=False)
+    book_id = mapped_column(Integer, ForeignKey(
+        "books.id"), unique=True, nullable=False)
     user = relationship("User", back_populates="shopping_cart")
     book = relationship("Book")
 

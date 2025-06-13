@@ -9,8 +9,10 @@ from app.controllers.wishlist_item_controller import wishlist_items_bp
 from app.controllers.profile_controller import profile_bp
 from app.controllers.my_library_controller import my_library_bp
 from app.controllers.shopping_cart_controller import shopping_cart_bp
+from app.controllers.order_controller import order_bp
 from app.error_handlers import register_error_handlers
 from app.admin import init_admin
+
 
 def create_app(env: str | None = None) -> Flask:
     app = Flask(__name__)
@@ -33,6 +35,7 @@ def create_app(env: str | None = None) -> Flask:
     app.register_blueprint(wishlist_items_bp, url_prefix="/api/v1")
     app.register_blueprint(my_library_bp, url_prefix="/api/v1")
     app.register_blueprint(shopping_cart_bp, url_prefix="/api/v1")
+    app.register_blueprint(order_bp, url_prefix="/api/v1")
 
     # health check
     @app.get("/ping")
