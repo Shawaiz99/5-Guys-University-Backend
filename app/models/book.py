@@ -53,7 +53,10 @@ class Book(db.Model):
     def is_new(self):
         """This method checks if the book is new based on the date added."""
         now = datetime.now(timezone.utc)
-        return (now - self.date_added).days < 60
+        date_added = self.date_added
+        if date_added.tzinfo is None:
+            date_added = date_added.replace(tzinfo=timezone.utc)
+        return (now - date_added).days < 60
 
     def serialize(self):
         return {

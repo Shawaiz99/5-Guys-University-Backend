@@ -37,6 +37,13 @@ class Order(db.Model):
             "items": [item.serialize() for item in self.items]
         }
 
+    def is_new(self):
+        now = datetime.now(timezone.utc)
+        date_added = self.created_at
+        if date_added.tzinfo is None:
+            date_added = date_added.replace(tzinfo=timezone.utc)
+        return (now - date_added).days < 60
+
 
 class OrderItem(db.Model):
     __tablename__ = "order_items"

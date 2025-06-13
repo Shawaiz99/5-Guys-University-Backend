@@ -23,6 +23,7 @@ class User(db.Model):
         Enum("Student", "Professor", "Librarian", name="role"),
         default="Student"
     )
+    is_admin: Mapped[bool] = mapped_column(db.Boolean, default=False)
 
     profile = relationship("Profile", back_populates="user",
                            uselist=False, cascade="all, delete-orphan")
