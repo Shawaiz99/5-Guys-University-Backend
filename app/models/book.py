@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from sqlalchemy import String, DateTime, Integer, Enum, Float, DECIMAL, ForeignKey
 from sqlalchemy.orm import mapped_column, relationship
 from app.extensions import db
@@ -39,17 +39,24 @@ class Book(db.Model):
 
    # relationships:
     author = relationship("Author", back_populates="books")
-    
+
     # wishlist_items = relationship(
     wishlist_items = relationship(
         "WishlistItem", back_populates="book", cascade="all, delete-orphan")
-  
-    
+
     # book_image_model = relationship(
     #     "BookImageModel", back_populates="book", cascade="all, delete-orphan")
-    
+
     purchased_by = relationship(
         "MyLibrary", back_populates="book", cascade="all, delete-orphan")
+
+    def is_new(self):
+        """This method checks if the book is new based on the date added."""
+        now = datetime.now(timezone.utc)
+        date_added = self.date_added
+        if date_added.tzinfo is None:
+            date_added = date_added.replace(tzinfo=timezone.utc)
+        return (now - date_added).days < 60
 
     def serialize(self):
         return {
@@ -70,5 +77,6 @@ class Book(db.Model):
             "cover_image_url": self.cover_image_url,
             "date_added": self.date_added.isoformat(),
             "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat()
+            "updated_at": self.updated_at.isoformat(),
+            "is_new": self.is_new()
         }
