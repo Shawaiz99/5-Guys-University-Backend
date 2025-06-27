@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from app.config import get_config
 from app.extensions import db, migrate, cors, jwt
 from app.controllers.auth_controller import auth_bp
@@ -17,6 +18,9 @@ from app.admin import init_admin
 def create_app(env: str | None = None) -> Flask:
     app = Flask(__name__)
     app.config.from_object(get_config(env))
+
+    # Sadece belirli bir origin'e izin ver
+    CORS(app, origins=["http://localhost:5173"])  # veya frontend adresin neyse
 
     init_admin(app)
     db.init_app(app)

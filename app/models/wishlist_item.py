@@ -25,5 +25,4 @@ class WishlistItem(db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "book_id": self.book_id,
-            "created_at": self.created_at.isoformat()
         }

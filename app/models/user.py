@@ -48,5 +48,10 @@ class User(db.Model):
             "role": self.user_role,
             "is_active": self.is_active,
             "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat()
+            "updated_at": self.updated_at.isoformat(),
+            "is_admin": self.is_admin,
+            "profile": self.profile.serialize() if self.profile else None,
+            "wishlist_items": [item.serialize() for item in self.wishlist_items],
+            "library": self.library.serialize() if self.library else None,
+            "shopping_cart": [cart.serialize() for cart in self.shopping_cart] if self.shopping_cart else []
         }
