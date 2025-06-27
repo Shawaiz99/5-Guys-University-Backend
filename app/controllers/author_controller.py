@@ -39,7 +39,7 @@ def create_author():
         biography=data["biography"],
         photo_url=data["photo_url"]
     )
-    return jsonify(author.serialize()), 201
+    return jsonify({"message": "Author created successfully", "author": author.serialize()}), 201
 
 
 @author_bp.route("/authors/<int:author_id>", methods=["PUT"])
@@ -71,3 +71,22 @@ def delete_author(author_id):
 
     AuthorService.delete_author(author)
     return jsonify({"message": f"Author with id: {author_id} successfully deleted"}), 200
+
+
+@author_bp.route("/authors/bulk", methods=["POST"])
+def create_authors_bulk():
+    data = request.get_json()
+    if not data or not isinstance(data, list):
+        return jsonify({"error": "A list of authors is required."}), 400
+
+    created = []
+    for author_data in data:
+        if not all(key in author_data for key in ("name", "biography", "photo_url")):
+            continue
+        author = AuthorService.create_author(
+            name=author_data["name"],
+            biography=author_data["biography"],
+            photo_url=author_data["photo_url"]
+        )
+        created.append(author.serialize())
+    return jsonify({"message": f"{len(created)} authors created.", "authors": created}), 201

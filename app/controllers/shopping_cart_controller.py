@@ -29,7 +29,7 @@ def add_to_cart(book_id: int):
         return jsonify({"error": str(e)}), 400
 
 
-@shopping_cart_bp.route("/cart/<int:book_id>", methods=["DELETE"])
+@shopping_cart_bp.route("/cart/books/<int:book_id>", methods=["DELETE"])
 @jwt_required()
 def remove_from_cart(book_id: int):
     user_id = get_jwt_identity()

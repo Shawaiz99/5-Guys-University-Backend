@@ -5,10 +5,9 @@ from sqlalchemy import Integer, String
 from sqlalchemy.orm import mapped_column, relationship
 
 
-
 class Author(db.Model):
     __tablename__ = "authors"
-    id = mapped_column(Integer, primary_key=True)
+    id = mapped_column(Integer, primary_key=True, autoincrement=True)
     name = mapped_column(String(255), nullable=False)
     biography = mapped_column(String(1000), nullable=True)
     photo_url = mapped_column(String(255), nullable=True)
@@ -16,9 +15,6 @@ class Author(db.Model):
     # One author has many books
     books = relationship("Book", back_populates="author",
                          cascade="all, delete-orphan")
-
-    books = relationship(
-        "Book", back_populates="author", cascade="all, delete-orphan")
 
     def serialize(self):
         return {

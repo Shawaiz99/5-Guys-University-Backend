@@ -185,10 +185,87 @@ def delete_book(book_id):
         book = BookService.get_book_by_id(book_id)
         if not book:
             return jsonify({"error": "Book not found"}), 404
+
+        # Optional: Check if book is referenced in order_items before attempting delete
+        from app.models.order import OrderItem
+        from app.extensions import db
+        referenced = db.session.query(
+            OrderItem).filter_by(book_id=book_id).first()
+        if referenced:
+            return jsonify({"error": "Cannot delete book because it is referenced in an order."}), 400
+
         BookService.delete_book(book_id)
-        return jsonify({"message": "Book with '{title}' name successfully deleted".format(title=book.title)}), 200
+        return jsonify({"message": f"Book with '{book.title}' name successfully deleted"}), 200
+    except IntegrityError as e:
+        return jsonify({"error": "Cannot delete book because it is referenced in an order."}), 400
     except ValueError:
         return jsonify({"error": "Book not found"}), 404
     except Exception as e:
-        # Log the exception if needed
         return jsonify({"error": "Internal server error", "message": str(e)}), 500
+
+
+@book_bp.route("/books/bulk", methods=["POST"])
+def bulk_create_books():
+    """Bulk create books
+    Request body:
+    [
+        {
+            "title": "Book Title 1",
+            "author_id": 1,
+            "isbn": "123-4567890123",
+            "availabilaty_status": "Available"
+        },
+        {
+            "title": "Book Title 2",
+            "author_id": 2,
+            "isbn": "123-4567890124",
+            "availabilaty_status": "Available"
+        }
+    ]
+    Returns 
+        201: Books successfully created
+        400: Validation error
+    """
+    data = request.get_json()
+
+    if not isinstance(data, list) or not data:
+        return jsonify({"error": "Request body must be a non-empty list"}), 400
+
+    created_books = []
+    for book_data in data:
+        if not book_data.get("title") or not book_data.get("author_id") or not book_data.get("isbn"):
+            return jsonify({"error": "Each book must have title, author_id, and isbn"}), 400
+
+        if BookRepository.get_by_title(book_data["title"]):
+            return jsonify({"error": f"A book with title '{book_data['title']}' already exists."}), 400
+
+        if BookRepository.get_by_isbn(book_data["isbn"]):
+            return jsonify({"error": f"A book with ISBN '{book_data['isbn']}' already exists."}), 400
+
+        try:
+            book = BookService.create_book(
+                title=book_data["title"],
+                author_id=book_data["author_id"],
+                genre=book_data.get("genre"),
+                description=book_data.get("description"),
+                pages=book_data.get("pages"),
+                rating=book_data.get("rating"),
+                price=book_data.get("price"),
+                availabilaty_status=book_data.get(
+                    "availabilaty_status", "Available"),
+                quantity=book_data.get("quantity", 0),
+                cover_image_url=book_data.get("cover_image_url"),
+                isbn=book_data["isbn"],
+                publication_year=book_data.get("publication_year"),
+                publisher=book_data.get("publisher")
+            )
+            created_books.append(book.serialize())
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 400
+
+    return jsonify(
+        {
+            "message": f"{len(created_books)} books successfully created!",
+            "books": created_books,
+        }
+    ), 201

@@ -17,6 +17,4 @@ class ShoppingCart(db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "book_id": self.book_id,
-            "user": self.user.serialize() if self.user else None,
-            "book": self.book.serialize() if self.book else None
         }
