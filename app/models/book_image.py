@@ -4,7 +4,8 @@ from datetime import datetime
 
 class BookImage(db.Model):
     __tablename__ = "book_images"
-
+    
+    caption = db.Column(db.String, nullable=True)
     id = db.Column(db.Integer, primary_key=True)
     image_url = db.Column(db.String(255), nullable=False)
     cloudinary_public_id = db.Column(db.String(255), nullable=False)
@@ -21,6 +22,7 @@ class BookImage(db.Model):
             "cloudinary_public_id": self.cloudinary_public_id,
             "is_primary": self.is_primary,
             "book_id": self.book_id,
+            "caption": self.caption,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
         }
