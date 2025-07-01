@@ -44,8 +44,8 @@ class Book(db.Model):
     wishlist_items = relationship(
         "WishlistItem", back_populates="book", cascade="all, delete-orphan")
 
-    # book_image_model = relationship(
-    #     "BookImageModel", back_populates="book", cascade="all, delete-orphan")
+    images = relationship("BookImage", back_populates="book",
+                          cascade="all, delete-orphan")
 
     purchased_by = relationship(
         "MyLibrary", back_populates="book", cascade="all, delete-orphan")
@@ -78,5 +78,8 @@ class Book(db.Model):
             "date_added": self.date_added.isoformat(),
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
-            "is_new": self.is_new()
+            "is_new": self.is_new(),
+            "images": [img.serialize() for img in self.images],
+            "wishlist_items": [item.serialize() for item in self.wishlist_items],
+            "purchased_by": [lib.serialize() for lib in self.purchased_by]
         }

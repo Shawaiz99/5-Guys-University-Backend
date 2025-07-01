@@ -50,7 +50,7 @@ class OrderItem(db.Model):
     id = mapped_column(Integer, primary_key=True)
     order_id = mapped_column(Integer, ForeignKey("orders.id"), nullable=False)
     book_id = mapped_column(Integer, ForeignKey("books.id"), nullable=False)
-    quantity = mapped_column(Integer, default=1, nullable=False)
+    quantity = mapped_column(Integer, nullable=False)
     price = mapped_column(Float, nullable=False)
 
     order = relationship("Order", back_populates="items")
@@ -65,3 +65,31 @@ class OrderItem(db.Model):
             "price": self.price,
             "book": self.book.serialize() if self.book else None
         }
+
+
+def serialize_order(order):
+    return {
+        "id": order.id,
+        "user_id": order.user_id,
+        "address_line": order.address_line,
+        "city": order.city,
+        "state": order.state,
+        "zipcode": order.zipcode,
+        "card_last4": order.card_last4,
+        "total_price": order.total_price,
+        "status": order.status,
+        "created_at": order.created_at.isoformat() if order.created_at else None,
+        "books": [
+            {
+                "id": item.book.id,
+                "title": item.book.title,
+                "author": item.book.author.name if hasattr(item.book.author, "name") else item.book.author,
+                "cover_image": getattr(item.book, "cover_image", None) or getattr(item.book, "cover_image_url", None),
+                "price": item.book.price,
+                "isbn": getattr(item.book, "isbn", None),
+                "quantity": item.quantity,
+                "order_item_id": item.id,
+            }
+            for item in order.items if item.book
+        ],
+    }

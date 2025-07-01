@@ -33,6 +33,8 @@ class User(db.Model):
         "MyLibrary", back_populates="user", cascade="all, delete-orphan")
     shopping_cart = relationship(
         "ShoppingCart", back_populates="user", cascade="all, delete-orphan")
+    order_history = relationship(
+        "Order", back_populates="user", cascade="all, delete-orphan")
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -52,6 +54,6 @@ class User(db.Model):
             "is_admin": self.is_admin,
             "profile": self.profile.serialize() if self.profile else None,
             "wishlist_items": [item.serialize() for item in self.wishlist_items],
-            "library": self.library.serialize() if self.library else None,
+            "library": [lib.serialize() for lib in self.library] if self.library else [],
             "shopping_cart": [cart.serialize() for cart in self.shopping_cart] if self.shopping_cart else []
         }

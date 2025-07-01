@@ -4,7 +4,7 @@ from app.extensions import db
 from app.models.author import Author
 from app.models.my_library import MyLibrary
 # OrderItem eklendi
-from app.models import User, Author, Book, WishlistItem, ShoppingCart, Order, OrderItem
+from app.models import User, Author, Book, WishlistItem, ShoppingCart, Order, OrderItem, MyLibrary, Profile
 
 admin_panel = Admin(name='Admin Panel', template_mode='bootstrap4')
 
@@ -53,6 +53,11 @@ class OrderItemView(ModelView):
     form_columns = [c.name for c in OrderItem.__table__.columns]
 
 
+class ProfileView(ModelView):
+    column_list = [c.name for c in Profile.__table__.columns]
+    form_columns = [c.name for c in Profile.__table__.columns]
+
+
 def init_admin(app):
     admin_panel.init_app(app)
     admin_panel.add_view(UserView(User, db.session))
@@ -63,4 +68,5 @@ def init_admin(app):
     admin_panel.add_view(ShoppingCartView(ShoppingCart, db.session))
     admin_panel.add_view(OrderView(Order, db.session))
     admin_panel.add_view(OrderItemView(OrderItem, db.session))
+    admin_panel.add_view(ProfileView(Profile, db.session))
     return admin_panel

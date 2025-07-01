@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.order_service import OrderService
+# serialize_order fonksiyonunu import et
+from app.models.order import serialize_order
 
 order_bp = Blueprint("order_api", __name__)
 
@@ -30,10 +32,10 @@ def create_order():
 
 @order_bp.route("/orders", methods=["GET"])
 @jwt_required()
-def get_user_orders():
+def get_orders():
     user_id = get_jwt_identity()
     orders = OrderService.get_user_orders(user_id)
-    return jsonify([order.serialize() for order in orders]), 200
+    return jsonify([serialize_order(order) for order in orders]), 200
 
 
 @order_bp.route("/orders/<int:order_id>", methods=["GET"])

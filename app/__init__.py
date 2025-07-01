@@ -33,9 +33,9 @@ def create_app(env: str | None = None) -> Flask:
 
     # register blueprints
     app.register_blueprint(auth_bp, url_prefix="/api/v1/auth")
-    app.register_blueprint(profile_bp)
     app.register_blueprint(book_bp, url_prefix="/api/v1")
     app.register_blueprint(user_bp, url_prefix="/api/v1")
+    app.register_blueprint(profile_bp, url_prefix="/api/v1")
     app.register_blueprint(author_bp, url_prefix="/api/v1")
     app.register_blueprint(wishlist_items_bp, url_prefix="/api/v1")
     app.register_blueprint(my_library_bp, url_prefix="/api/v1")

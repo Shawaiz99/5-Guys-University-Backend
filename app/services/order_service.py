@@ -34,12 +34,12 @@ class OrderService:
             items_data=items_data
         )
 
-        for item in items_data:
+        for item in order.items:
             exists = db.session.query(MyLibrary).filter_by(
-                user_id=user_id, book_id=item["book_id"]).first()
+                user_id=user_id, book_id=item.book_id).first()
             if not exists:
-                my_lib = MyLibrary(user_id=user_id, book_id=item["book_id"])
-                db.session.add(my_lib)
+                db.session.add(
+                    MyLibrary(user_id=user_id, book_id=item.book_id))
         db.session.commit()
 
         ShoppingCartRepository.clear_cart(user_id)

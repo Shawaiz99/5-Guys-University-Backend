@@ -5,6 +5,7 @@ from app.services.book_image_service import BookImageService
 book_image_bp = Blueprint("book_image_bp", __name__)
 book_image_service = BookImageService()
 
+
 @book_image_bp.route("/<int:book_id>/images", methods=["POST"])
 def upload_book_image(book_id):
     file = request.files["file"]

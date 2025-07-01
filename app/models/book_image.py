@@ -1,19 +1,25 @@
 from app.extensions import db
 from datetime import datetime
+from sqlalchemy.orm import relationship
 
 
 class BookImage(db.Model):
     __tablename__ = "book_images"
-    
+
     caption = db.Column(db.String, nullable=True)
     id = db.Column(db.Integer, primary_key=True)
     image_url = db.Column(db.String(255), nullable=False)
     cloudinary_public_id = db.Column(db.String(255), nullable=False)
     is_primary = db.Column(db.Boolean, default=False, nullable=False)
-    book_id = db.Column(db.Integer, db.ForeignKey("books.id", ondelete="CASCADE"), nullable=False)
+    book_id = db.Column(db.Integer, db.ForeignKey(
+        "books.id", ondelete="CASCADE"), nullable=False)
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at = db.Column(
+        db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow,
+                           onupdate=datetime.utcnow, nullable=False)
+
+    book = relationship("Book", back_populates="images")
 
     def to_dict(self):
         return {
