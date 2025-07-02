@@ -65,3 +65,15 @@ def search_books_by_filter():
 
     except Exception as e:
         return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500
+
+
+@my_library_bp.route("/my-library/books/<int:book_id>", methods=["DELETE"])
+@jwt_required()
+def delete_book_from_library(book_id):
+    """Delete a book from the user's library"""
+    user_id = int(get_jwt_identity())
+    success = MyLibraryService.delete_book_from_library(user_id, book_id)
+    if success:
+        return jsonify({"message": "Book deleted from your library"}), 200
+    else:
+        return jsonify({"error": "Book not found in your library"}), 404

@@ -22,7 +22,6 @@ class MyLibrary(db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "book_id": self.book_id,
-            "created_at": self.created_at.isoformat(),
-            "book": self.book.serialize() if self.book else None
-
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "book": self.book.serialize() if self.book else None,
         }

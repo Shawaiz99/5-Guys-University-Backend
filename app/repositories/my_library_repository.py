@@ -1,4 +1,3 @@
-
 from app.models.my_library import MyLibrary
 from app.models.book import Book
 from typing import Optional, List
@@ -46,3 +45,15 @@ class MyLibraryRepository:
             books = [b for b in books if genre.lower() in (
                 b.genre or "").lower()]
         return books
+
+    @staticmethod
+    def delete_book_from_library(user_id: int, book_id: int) -> bool:
+        """Delete a book from the user's library"""
+        entry = db.session.execute(
+            select(MyLibrary).where(MyLibrary.user_id == user_id, MyLibrary.book_id == book_id)
+        ).scalar_one_or_none()
+        if not entry:
+            return False
+        db.session.delete(entry)
+        db.session.commit()
+        return True

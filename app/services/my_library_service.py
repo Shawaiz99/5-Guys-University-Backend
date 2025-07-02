@@ -25,3 +25,8 @@ class MyLibraryService:
     ) -> List[MyLibrary]:
         """Get filtered books in the user's library."""
         return MyLibraryRepository.get_filtered_books(user_id, title, author, isbn, genre)
+
+    @staticmethod
+    def delete_book_from_library(user_id: int, book_id: int) -> bool:
+        """Delete a book from the user's library."""
+        return MyLibraryRepository.delete_book_from_library(user_id, book_id)

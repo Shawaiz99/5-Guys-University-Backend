@@ -18,6 +18,7 @@ import cloudinary
 from app.config import get_config
 from dotenv import load_dotenv
 
+
 def create_app(env: str | None = None) -> Flask:
     load_dotenv()
     app = Flask(__name__)
