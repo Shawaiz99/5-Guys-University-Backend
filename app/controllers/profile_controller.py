@@ -4,6 +4,8 @@ from app.extensions import db
 from app.utils.validators import is_valid_name, is_valid_bio, is_valid_url
 from app.services.profile_service import ProfileService
 from flask_jwt_extended import get_jwt_identity, jwt_required
+import cloudinary
+
 
 profile_bp = Blueprint("profile_bp", __name__)
 
@@ -33,33 +35,32 @@ def get_user_profile(user_id: int):
 @jwt_required()
 def update_user_profile(user_id: int):
     user_id_jwt = int(get_jwt_identity())
-
-    if not user_id_jwt == user_id:
-        return jsonify({"error": "You are not authorized to access this account."})
-
-    profile = ProfileService.get_profile_by_user_id(user_id)
-
-    if not profile:
-        return (
-            jsonify({"error": "404 Not Found",
-                    "message": f"User with id: {user_id} not found."}),
-            404,
-        )
+    if user_id_jwt != user_id:
+        return jsonify({"error": "You are not authorized to access this account."}), 403
 
     data = request.get_json()
-
     if not data:
         return jsonify({"error": "400 Bad Request", "message": "Data as JSON not provided"}), 400
 
-    # update data
+    profile_fields = ["first_name", "last_name", "bio", "avatar_url", "cloudinary_public_id"]
+    profile_data = {field: data.get(field) for field in profile_fields if field in data}
+
     try:
-        profile = ProfileService.update_user_profile(user_id, data)
-        return jsonify(
-            {"message": "User profile successfully updated.",
-                "profile": profile.serialize()}
-        )
+        profile = ProfileService.get_profile_by_user_id(user_id)
+
+        if profile:
+            profile = ProfileService.update_user_profile(user_id, profile_data)
+        else:
+            user = UserRepository.get_by_id(user_id)
+            profile = ProfileService.create_profile_for_user(user, profile_data)
+
+        return jsonify({
+            "message": "User profile successfully updated.",
+            "profile": profile.serialize()
+        }), 200
+
     except ValueError as e:
-        return jsonify({"error": "Something went wrong", "message": str(e)})
+        return jsonify({"error": "Something went wrong", "message": str(e)}), 400
 
 
 @profile_bp.route("/users/<int:user_id>/profile/image", methods=["PATCH"])

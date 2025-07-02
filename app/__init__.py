@@ -14,20 +14,26 @@ from app.controllers.order_controller import order_bp
 from app.error_handlers import register_error_handlers
 from app.admin import init_admin
 from app.controllers.book_image_controller import book_image_bp
-
+import cloudinary
+from app.config import get_config
+from dotenv import load_dotenv
 
 def create_app(env: str | None = None) -> Flask:
+    load_dotenv()
     app = Flask(__name__)
     app.config.from_object(get_config(env))
-
-    # Sadece belirli bir origin'e izin ver
-    CORS(app, origins=["http://localhost:5173"])  # veya frontend adresin neyse
 
     init_admin(app)
     db.init_app(app)
     migrate.init_app(app, db)
     cors.init_app(app)
     jwt.init_app(app)
+
+    cloudinary.config(
+        cloud_name=app.config["CLOUDINARY_CLOUD_NAME"],
+        api_key=app.config["CLOUDINARY_API_KEY"],
+        api_secret=app.config["CLOUDINARY_API_SECRET"],
+    )
 
     register_error_handlers(app)
 

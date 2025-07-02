@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify
 from app.services.user_service import UserService
 from flask_jwt_extended import jwt_required
 
+
 user_bp = Blueprint("users", __name__)
 
 
@@ -19,3 +20,14 @@ def get_user(user_id):
     if not user:
         return jsonify({"error": "User not found"}), 404
     return jsonify({"user": user.serialize()}), 200
+
+@user_bp.route("/users/<int:user_id>", methods=["DELETE"])
+@jwt_required()
+def delete_user(user_id):
+    user = UserService.get_user_by_id(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    UserService.delete_user(user)
+    return jsonify({"message": "User deleted successfully"}), 200
+

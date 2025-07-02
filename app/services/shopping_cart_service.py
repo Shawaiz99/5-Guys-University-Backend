@@ -4,7 +4,7 @@ from app.repositories.shopping_cart_repository import ShoppingCartRepository
 class ShoppingCartService:
     @staticmethod
     def get_user_cart(user_id):
-        return ShoppingCartRepository.get_cart_by_user_id(user_id)
+        return ShoppingCartRepository.get_cart_items(user_id)
 
     @staticmethod
     def get_cart_items(user_id):

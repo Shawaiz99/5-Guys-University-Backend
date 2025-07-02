@@ -27,7 +27,7 @@ class ProfileRepository:
         return result.scalars().first()
 
     @staticmethod
-    def update(profile: Profile) -> Profile:
+    def update_profile(profile: Profile) -> Profile:
         db.session.commit()
         return profile
 

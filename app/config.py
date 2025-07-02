@@ -14,6 +14,9 @@ class BaseConfig:
     SECRET_KEY = getenv("SECRET_KEY")
     JWT_SECRET_KEY = getenv("SECRET_KEY")
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)
+    CLOUDINARY_CLOUD_NAME = getenv("CLOUDINARY_CLOUD_NAME")
+    CLOUDINARY_API_KEY = getenv("CLOUDINARY_API_KEY")
+    CLOUDINARY_API_SECRET = getenv("CLOUDINARY_API_SECRET")
 
 
 
@@ -36,3 +39,4 @@ def get_config(env):
         "testing": TestConfig,
         "production": ProductionConfig,
     }.get(env or getenv("FLASK_ENV", "development"))
+

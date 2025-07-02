@@ -24,7 +24,7 @@ class ProfileService:
         for key, value in data.items():
             if hasattr(profile, key):
                 setattr(profile, key, value)
-        return ProfileRepository.update(profile)
+        return ProfileRepository.update_profile(profile)
 
     @staticmethod
     def delete_profile_by_user_id(user_id: int) -> bool:
