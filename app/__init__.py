@@ -16,11 +16,9 @@ from app.admin import init_admin
 from app.controllers.book_image_controller import book_image_bp
 import cloudinary
 from app.config import get_config
-from dotenv import load_dotenv
 
 
 def create_app(env: str | None = None) -> Flask:
-    load_dotenv()
     app = Flask(__name__)
     app.config.from_object(get_config(env))
 
