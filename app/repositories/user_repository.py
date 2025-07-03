@@ -51,8 +51,8 @@ class UserRepository:
 
     @staticmethod
     def update(user: User) -> User:
-        """Update the user"""
-        db.session.commit()
+        db.session.add(user)
+        db.session.commit() 
         return user
 
     @staticmethod
@@ -67,3 +67,9 @@ class UserRepository:
         stmt = select(User).limit(limit).offset(offset)
         result = db.session.execute(stmt)
         return list(result.scalars().all())
+    
+    @staticmethod
+    def change_password(user: User, new_password: str) -> User:
+        user.password = generate_password_hash(new_password)
+        db.session.commit()
+        return user

@@ -35,6 +35,7 @@ def get_user_profile(user_id: int):
 @jwt_required()
 def update_user_profile(user_id: int):
     user_id_jwt = int(get_jwt_identity())
+    print(f"🔐 JWT ID: {user_id_jwt}, Route param ID: {user_id}")
     if user_id_jwt != user_id:
         return jsonify({"error": "You are not authorized to access this account."}), 403
 
