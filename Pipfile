@@ -18,6 +18,7 @@ wtforms = "<3.2"
 python-dotenv = "*"
 flask-jwt-extended = "*"
 cloudinary = "*"
+gunicorn = "*"
 
 [dev-packages]
 pytest = "*"
